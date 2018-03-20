@@ -42,9 +42,9 @@ public class Comunicaciones {
 	/**
 	 * Crea un nuevo usuario en el servidor.
 	 * @return 0 -> error en la transmisión
-	 *         1 -> creado correctamente
-	 *		   2 -> mal usuario/contraseña
-	 *		   3 -> error desconocido
+	 *		   2 -> Usuario/contraseña no valido (debe tener entre 5 y 25 caracteres sin espacios)
+	 *		   3 -> nombre de usuario ocupado
+	 *		   4 -> error desconocido
 	 */
     public static int addNewUser(String user, String pass) {
         String respuesta = ServerConection.consultarAlServidor("/NewUs/" + user + "/" + pass + "/", 1)[0];
@@ -55,9 +55,12 @@ public class Comunicaciones {
             else if(respuesta.equals("/BadUsPas/")){
                 return 2;
             }
-            else{
-            	return 3;
-            }
+			else if(respuesta.equals("/IdOcupad/")){
+				return 3;
+			}
+			else{
+				return 4;
+			}
         }
         return 0;
     }
@@ -70,9 +73,9 @@ public class Comunicaciones {
 	 *		   3 -> token malo
 	 *		   4 -> error desconocido
 	 */
-    public static int irrigateNow(int port, int timeoutInSeconds) {
-        String respuesta = ServerConection.consultarAlServidor("/Regar/" + Comunicaciones.token + "/" + port + "/" + timeoutInSeconds + "/", 1)[0];
-        
+    public static int irrigateNow(int port, int timeoutInSeconds, String idControlador) {
+		String respuesta = ServerConection.consultarAlServidor("/Regar/" + Comunicaciones.token + "/" + port + "/" + timeoutInSeconds + "/" + idControlador + "/", 1)[0];
+
 		if(respuesta != null) {
             if(respuesta.equals("/True/")){
                 return 1;
@@ -100,10 +103,10 @@ public class Comunicaciones {
 	 * conectada)
 	 * @return el array de boolean.
 	 */
-    public static Boolean[] isWatering() {
+    public static Boolean[] isWatering(String idControlador) {
         Boolean[] regando = new Boolean[32];
-        String respuesta = ServerConection.consultarAlServidor("/GetRe/" + Comunicaciones.token + "/", 1)[0];
-        if(respuesta != null){
+		String respuesta = ServerConection.consultarAlServidor("/GetRe/" + Comunicaciones.token + "/" + idControlador + "/", 1)[0];
+		if(respuesta != null){
 	        if(respuesta.substring(0, 10).equals("/AnswerRg/")){
 		        String[] separados = respuesta.substring(10, respuesta.length()-1).split("/");
 		        for(int j1 = 0; j1 < separados.length; j1++){
@@ -150,8 +153,8 @@ public class Comunicaciones {
 		byte[] controladorSerializado = bs.toByteArray();
 
     	String controladorString = Hex.encodeHexString(controladorSerializado);
-    	String respuesta = ServerConection.consultarAlServidor("/Con/" + Comunicaciones.token + "/" + controladorString + "/", 1)[0];
-    	if(respuesta != null){
+		String respuesta = ServerConection.consultarAlServidor("/UpCon/" + Comunicaciones.token + "/" + controladorString + "/" + controlador.getId() + "/", 1)[0];
+	   	if(respuesta != null){
     		if(respuesta.equals("/Correcto/")){
     			return 1;
     		}
