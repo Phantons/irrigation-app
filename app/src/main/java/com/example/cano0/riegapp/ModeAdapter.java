@@ -53,9 +53,8 @@ static class ViewHolderMode {
                 @Override                    //checkbox ,                activado:true-false
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Mode mode = (Mode) viewHolder.activeN.getTag();
-                    mode.setActive(buttonView.isChecked());
                     UsuarioClass usuarioClass = new UsuarioClass();
-                        usuarioClass.getControlador(nControlador).setActive_mode(mode);
+                    usuarioClass.getControlador(nControlador).setActive_mode(mode);
                 }
             });
             view.setTag(viewHolder);

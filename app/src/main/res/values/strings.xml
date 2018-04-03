@@ -243,4 +243,7 @@
         <item>30</item>
         <item>45</item>
     </string-array>
+    <string-array name="region_array">
+
+    </string-array>
 </resources>

@@ -113,17 +113,9 @@ public class ModeActivity extends AppCompatActivity {
     private void saveMode() {
         mode.setName(nomMode.getText().toString());
         controlador.setMode(mode);
-        usuarioClass.setControladorN(controlador);
         hideSoftKeyboard();
-        /*
         saveAsyntask = new SaveAsyntask(controlador);
         saveAsyntask.execute((Void) null);
-        */
-        Toast.makeText(this, "Modo salvado", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(this, ModesActivity.class);
-        i.putExtra("nControlador", nControlador);
-        i.putExtra("nMode", nMode);
-        startActivity(i);
     }
 
 
@@ -151,11 +143,20 @@ public class ModeActivity extends AppCompatActivity {
         if(mode.getName().isEmpty()) {
             usuarioClass.getControlador(nControlador).getList_modo().remove(nMode);
         }
+        if(SocketHandler.getAllControllers() != null) {
+            System.out.println("zonas guardadas en servidor: " + Integer.toString(SocketHandler.getAllControllers().get(nControlador).getList_modo().get(nMode).getZones().size()));
+        } else {
+            System.out.println("no hay zonas");
+        }
+        if(UsuarioClass.getControladorList() != null) {
+            System.out.println("zonas guardadas en app: " + Integer.toString(UsuarioClass.getControladorList().get(nControlador).getList_modo().get(nMode).getZones().size()));
+        } else {
+            System.out.println("no hay zonas");
+        }
         Intent i = new Intent(this, ModesActivity.class);
         i.putExtra("nControlador", nControlador);
         i.putExtra("nMode", nMode);
         startActivity(i);
-        super.onBackPressed();
         finish();
     }
 
@@ -170,13 +171,19 @@ public class ModeActivity extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            Comunicaciones comunicaciones = new Comunicaciones();
-            return comunicaciones.sendOrUpdateController(controlador);
+            return SocketHandler.sendOrUpdateController(controladorEnviado);
         }
+
         @Override
         protected void onPostExecute(final Integer success) {
             if(success == 1) {
-                Toast.makeText(context, "Modo guardado", Toast.LENGTH_SHORT).show();
+                usuarioClass.setControladorN(controlador);
+                //Toast.makeText(context, "Modo guardado", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(ModeActivity.this, ModesActivity.class);
+                i.putExtra("nControlador", nControlador);
+                i.putExtra("nMode", nMode);
+                startActivity(i);
+                finish();
             } else {
                 Toast.makeText(context, "Fallo en la conexión al intentar guardar cambios", Toast.LENGTH_SHORT).show();
             }

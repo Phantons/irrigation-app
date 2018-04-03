@@ -1,6 +1,7 @@
 package com.example.cano0.riegapp;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import es.upm.etsit.irrigation.util.LocalTime;
 
 public class ZoneActivity extends AppCompatActivity {
 
+    private SaveZoneAsyntask saveZoneAsyntask = null;
     private UsuarioClass usuarioClass;
     private Controlador controlador;
     private int nControlador;
@@ -175,13 +177,8 @@ public class ZoneActivity extends AppCompatActivity {
         zone.setShouldTakeWeather(tiempar);
         mode.setZone(nZone, zone);
         controlador.setMode(mode);
-        usuarioClass.setControladorN(controlador);
-        Intent i = new Intent(this, ModeActivity.class);
-        i.putExtra("nControlador", nControlador);
-        i.putExtra("nMode", nMode);
-        Toast.makeText(this, Integer.toString(nControlador) + " Modo: " + Integer.toString(nMode), Toast.LENGTH_SHORT).show();
-
-        startActivity(i);
+        saveZoneAsyntask = new SaveZoneAsyntask(controlador);
+        saveZoneAsyntask.execute((Void) null);
     }
 
     /**
@@ -239,7 +236,39 @@ public class ZoneActivity extends AppCompatActivity {
         i.putExtra("nControlador", nControlador);
         i.putExtra("nMode", nMode);
         startActivity(i);
-        super.onBackPressed();
         finish();
+    }
+    public class SaveZoneAsyntask extends AsyncTask<Void, Void, Integer> {
+
+        private Controlador controladorEnviado;
+
+        private  SaveZoneAsyntask(Controlador _controlador) {
+            this.controladorEnviado = _controlador;
+        }
+
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            return SocketHandler.sendOrUpdateController(controladorEnviado);
+        }
+
+        @Override
+        protected void onPostExecute(final Integer success) {
+            if(success == 1) {
+                usuarioClass.setControladorN(controlador);
+                Toast.makeText(ZoneActivity.this, Integer.toString(nControlador) + " Modo: " + Integer.toString(nMode), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ZoneActivity.this, "Fallo en la conexión al intentar guardar cambios", Toast.LENGTH_SHORT).show();
+            }
+            Intent i = new Intent(ZoneActivity.this, ModeActivity.class);
+            i.putExtra("nControlador", nControlador);
+            i.putExtra("nMode", nMode);
+            startActivity(i);
+            finish();
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
     }
 }

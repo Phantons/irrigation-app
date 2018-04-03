@@ -29,7 +29,7 @@ public class ServerConection {
         String[] salida = null;
         try{
             socket = new Socket();
-            socket.connect(new InetSocketAddress(InetAddress.getByName("DIRECCION DEL SERVER"), 0000), 5000);
+            socket.connect(new InetSocketAddress(InetAddress.getByName("joseanelco.cloudapp.net"), 4321), 5000);
             socket.setSoTimeout(10000);
             out = new DataOutputStream(socket.getOutputStream());
             in = new DataInputStream(socket.getInputStream());

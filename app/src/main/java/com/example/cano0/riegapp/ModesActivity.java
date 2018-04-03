@@ -58,7 +58,7 @@ public class ModesActivity extends AppCompatActivity {
         usuarioClass = new UsuarioClass();
         nControlador = getIntent().getExtras().getInt("nControlador");
         controlador = usuarioClass.getControlador(nControlador);
-        Toast.makeText(this, "controlador: " + controlador.getTitulo(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "controlador: " + controlador.getTitulo(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -76,24 +76,18 @@ public class ModesActivity extends AppCompatActivity {
 
 
     private void createModes() {
+        usuarioClass.setControladorN(controlador);
         Intent i = new Intent(context, ModeActivity.class);
         i.putExtra("nControlador", nControlador);
         i.putExtra("nMode", controlador.getList_modo().size());
         context.startActivity(i);
+        finish();
     }
 
 
     public void onBackPressed() {
-        UsuarioClass.setControladorN(controlador);
-        /*
         saveAsyntask = new SaveAsyntask(controlador);
         saveAsyntask.execute((Void) null);
-        */
-        Intent i = new Intent(this, ControllerActivity.class);
-        i.putExtra("nControlador", nControlador);
-        startActivity(i);
-        super.onBackPressed();
-        finish();
     }
 
     public class SaveAsyntask extends AsyncTask<Void, Void, Integer> {
@@ -107,16 +101,20 @@ public class ModesActivity extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            Comunicaciones comunicaciones = new Comunicaciones();
-            return comunicaciones.sendOrUpdateController(controlador);
+            return SocketHandler.sendOrUpdateController(controlador);
         }
         @Override
         protected void onPostExecute(final Integer success) {
             if(success == 1) {
+                UsuarioClass.setControladorN(controlador);
                 Toast.makeText(context, "Controlador guardado", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Fallo en la conexión al intentar guardar cambios", Toast.LENGTH_SHORT).show();
             }
+            Intent i = new Intent(ModesActivity.this, ControllerActivity.class);
+            i.putExtra("nControlador", nControlador);
+            startActivity(i);
+            finish();
         }
 
         @Override

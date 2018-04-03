@@ -17,7 +17,7 @@ import es.upm.etsit.irrigation.shared.Zone;
 
 public class ControllerActivity extends AppCompatActivity {
 
-    private Comunicaciones comunicaciones;
+    private SocketHandler socketHandler;
     private Toolbar toolbar;
     private TextView titulo;
     private TextView activeModeText;
@@ -77,7 +77,7 @@ public class ControllerActivity extends AppCompatActivity {
         Intent i = new Intent(ControllerActivity.this, ModesActivity.class);
         i.putExtra("nControlador", nControlador);
         startActivity(i);
-
+        finish();
     }
     private void getControlador() {
         nControlador = getIntent().getExtras().getInt("nControlador");
@@ -91,15 +91,14 @@ public class ControllerActivity extends AppCompatActivity {
     }
 
     private void setRegarYa() {
-        //mAuthTask = new RegarModeTask(true, 10);
-       // mAuthTask.execute((Void) null);
-        Toast.makeText(this, "regar ya a implementar comunicaciones", Toast.LENGTH_SHORT).show();
+        mAuthTask = new RegarModeTask(true, 10);
+        mAuthTask.execute((Void) null);
+        Toast.makeText(this, "lanzado regando", Toast.LENGTH_SHORT).show();
     }
 
     public void onBackPressed() {
         Intent i = new Intent(this, DatosActivity.class);
         startActivity(i);
-        super.onBackPressed();
         finish();
     }
 
@@ -122,7 +121,7 @@ public class ControllerActivity extends AppCompatActivity {
             if(regarAhora) {
                 int i = 0;
                 for(Zone zone : controller.getActiveMode().getZones()) {
-                    results[i] = comunicaciones.irrigateNow(zone.getPinAddress(), segundos);
+                    results[i] = SocketHandler.irrigateNow(zone.getPinAddress(), segundos, controller.getId());
                     i++;
                 }
             }

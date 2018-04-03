@@ -30,6 +30,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import android.content.Intent;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.net.*;
@@ -173,22 +175,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
+
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
+
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        }
+
+        else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -317,7 +324,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mEmail;
         private final String mPassword;
         private int result;
-        private Comunicaciones comunicaciones;
+        UsuarioClass usuarioClass;
+
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -326,14 +334,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Integer doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return 0;
-            }
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
@@ -346,11 +347,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             /*verificamos usuario en el servidor remoto
             */
             if(newUser) {
-                //result = comunicaciones.addNewUser(mEmail, mPassword);
-            } else {
-                //result = comunicaciones.login(mEmail, mPassword);
+                result = SocketHandler.addNewUser(mEmail, mPassword);
+                System.out.println("Resultado new user: " + result);
             }
-            result = 1;
+            result = SocketHandler.login(mEmail, mPassword);
+            System.out.println("Resultado del login: " + result);
+            usuarioClass = new UsuarioClass();
+            usuarioClass.setControladorList(SocketHandler.getAllControllers());
 
             return result;
         }
@@ -358,9 +361,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final Integer success) {
             mAuthTask = null;
-            showProgress(false);
 
             if (success == 1) {
+                if(usuarioClass.getControladorList() == null) {
+                    Toast.makeText(LoginActivity.this, "No se ha cargado ningun controlador", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "controladores: " + Integer.toString(usuarioClass.getControladorList().size()) + " cargados", Toast.LENGTH_SHORT).show();
+                }
                 Intent i = new Intent(LoginActivity.this, DatosActivity.class);
                 i.putExtra("usuario", mEmail);
                 startActivity(i);
@@ -368,9 +375,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } else if(success == 2) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
+                showProgress(false);
             } else {
                 mPasswordView.setError("conexión fallida");
                 mPasswordView.requestFocus();
+                showProgress(false);
             }
         }
 
