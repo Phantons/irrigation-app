@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -56,6 +57,7 @@ public class AddControlador extends AppCompatActivity {
             //revisamos que no hay nada sin rellenar
             Toast.makeText(AddControlador.this, "introduzca todos los parámetros", Toast.LENGTH_SHORT);
         } else {
+            hideSoftKeyboard();
             // Intent que envia los datos recopilados
             controlador = new Controlador(nomControlador.getText().toString(), idControlador.getText().toString(), true, muniControlador.getText().toString(), null, new ArrayList<Mode>());
             addControllerTask = new AddControllerTask(controlador);
@@ -84,9 +86,21 @@ public class AddControlador extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        hideSoftKeyboard();
         Intent i = new Intent(this, DatosActivity.class);
         startActivity(i);
         finish();
+    }
+
+
+    /**
+     * esconde el teclado
+     */
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
     /**
      * Represents an asynchronous login/registration task used to authenticate

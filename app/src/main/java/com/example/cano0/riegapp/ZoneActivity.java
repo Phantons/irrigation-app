@@ -82,6 +82,7 @@ public class ZoneActivity extends AppCompatActivity {
             }
         });
 
+        hideSoftKeyboard();
         getZoneSelected();
         configureDayTable();
 
@@ -167,6 +168,7 @@ public class ZoneActivity extends AppCompatActivity {
      * Guarda La Zona configurada
      */
     private void saveZone() {
+        hideSoftKeyboard();
         if(nomZone.getText().toString().isEmpty() || portZone.getText().toString().isEmpty()) {
             Toast.makeText(this, "Introduzca todos los parámetros", Toast.LENGTH_SHORT).show();
             return;
@@ -229,6 +231,7 @@ public class ZoneActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
+        hideSoftKeyboard();
         if(zone.getName().isEmpty()) {
             usuarioClass.getControlador(nControlador).getList_modo().get(nMode).getZones().remove(nZone);
         }

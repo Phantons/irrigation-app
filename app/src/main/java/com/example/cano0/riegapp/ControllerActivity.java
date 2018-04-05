@@ -93,7 +93,6 @@ public class ControllerActivity extends AppCompatActivity {
     private void setRegarYa() {
         mAuthTask = new RegarModeTask(true, 10);
         mAuthTask.execute((Void) null);
-        Toast.makeText(this, "lanzado regando", Toast.LENGTH_SHORT).show();
     }
 
     public void onBackPressed() {
@@ -116,7 +115,14 @@ public class ControllerActivity extends AppCompatActivity {
 
         @Override
         protected Integer[] doInBackground(Void... params) {
-            Integer[] results = new Integer[controller.getActiveMode().getZones().size()];
+            Integer[] results;
+            if(controller.getActiveMode() == null) {
+                results = new Integer[0];
+            }else if(controller.getActiveMode().getZones() == null) {
+                results = new Integer[0];
+            } else {
+                results = new Integer[controller.getActiveMode().getZones().size()];
+            }
             if (results.length == 0) { return results; }
             if(regarAhora) {
                 int i = 0;

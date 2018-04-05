@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mode implements Serializable {
-  private static final long serialVersionUID = 2L;
+  private static final long serialVersionUID = 3L;
   
   
   private transient int ID;

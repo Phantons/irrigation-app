@@ -9,7 +9,7 @@ import es.upm.etsit.irrigation.util.DayOfWeek;
 import es.upm.etsit.irrigation.util.Time;
 
 public class Schedule implements Serializable {
-  private static final long serialVersionUID = 2L;
+  private static final long serialVersionUID = 3L;
   
   private boolean[] days = new boolean[DayOfWeek.values().length];
   private List<Time> irrigationCycles = new ArrayList<Time>();

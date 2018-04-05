@@ -182,7 +182,7 @@ public final class LocalTime
     /**
      * Serialization version.
      */
-    private static final long serialVersionUID = 6414437269572265201L;
+    private static final long serialVersionUID = 3L;
 
     /**
      * The hour.
@@ -704,7 +704,7 @@ public final class LocalTime
      *
      * @throws InvalidObjectException always
      */
-    private void readObject(ObjectInputStream s) throws InvalidObjectException {
+    /*private void readObject(ObjectInputStream s) throws InvalidObjectException {
         throw new InvalidObjectException("Deserialization via serialization delegate");
-    }
+    }*/
 }

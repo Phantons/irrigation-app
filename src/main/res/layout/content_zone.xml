@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.cano0.riegapp.ZoneActivity"
+    tools:showIn="@layout/activity_zone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Nombre: "
+                android:textSize="@dimen/activity_vertical_margin"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Zona"
+                android:id="@+id/nomZone"
+                android:textSize="@dimen/activity_vertical_margin"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Puerto: "
+                android:textSize="@dimen/activity_vertical_margin"
+                android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Puerto"
+                android:id="@+id/portZone"
+                android:inputType="number"
+                android:textSize="@dimen/activity_horizontal_margin"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <CheckBox android:id="@+id/check_take_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take Weather"
+                android:onClick="onCheckDayClicked"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <CheckBox android:id="@+id/day1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lun"
+                android:textSize="12dp"
+                android:onClick="onCheckDayClicked"/>
+            <CheckBox android:id="@+id/day2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mart"
+                android:textSize="12dp"
+                android:onClick="onCheckDayClicked"/>
+            <CheckBox android:id="@+id/day3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mier"
+                android:textSize="12dp"
+                android:onClick="onCheckDayClicked"/>
+            <CheckBox android:id="@+id/day4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jue"
+                android:textSize="12dp"
+                android:onClick="onCheckDayClicked"/>
+            <CheckBox android:id="@+id/day5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vier"
+                android:textSize="12dp"
+                android:onClick="onCheckDayClicked"/>
+            <CheckBox android:id="@+id/day6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sáb"
+                android:textSize="12dp"
+                android:onClick="onCheckDayClicked"/>
+            <CheckBox android:id="@+id/day7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dom"
+                android:textSize="12dp"
+                android:onClick="onCheckDayClicked"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ini:"
+                android:textSize="25dp"/>
+            <EditText
+                android:id="@+id/initialhour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="15dp"
+                android:hint="Hora"/>
+            <EditText
+                android:id="@+id/initialminute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="15dp"
+                android:hint="Min"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fin:"
+                android:textSize="25dp"/>
+            <EditText
+                android:id="@+id/finalhour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="15dp"
+                android:hint="Hora"/>
+            <EditText
+                android:id="@+id/finalminute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="15dp"
+                android:hint="Min"/>
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@android:drawable/ic_input_add" />
+        <ListView
+            android:id="@+id/listTimes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+        </ListView>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

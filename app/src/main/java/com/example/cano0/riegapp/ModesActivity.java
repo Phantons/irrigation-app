@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -89,6 +90,7 @@ public class ModesActivity extends AppCompatActivity {
         saveAsyntask = new SaveAsyntask(controlador);
         saveAsyntask.execute((Void) null);
     }
+
 
     public class SaveAsyntask extends AsyncTask<Void, Void, Integer> {
 

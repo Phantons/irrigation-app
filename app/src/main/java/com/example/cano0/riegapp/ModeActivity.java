@@ -48,6 +48,7 @@ public class ModeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         nomMode = (EditText) findViewById(R.id.mode_name);
 
+        hideSoftKeyboard();
         getModeSelected();
         setActivity();
 
@@ -140,18 +141,9 @@ public class ModeActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
+        hideSoftKeyboard();
         if(mode.getName().isEmpty()) {
             usuarioClass.getControlador(nControlador).getList_modo().remove(nMode);
-        }
-        if(SocketHandler.getAllControllers() != null) {
-            System.out.println("zonas guardadas en servidor: " + Integer.toString(SocketHandler.getAllControllers().get(nControlador).getList_modo().get(nMode).getZones().size()));
-        } else {
-            System.out.println("no hay zonas");
-        }
-        if(UsuarioClass.getControladorList() != null) {
-            System.out.println("zonas guardadas en app: " + Integer.toString(UsuarioClass.getControladorList().get(nControlador).getList_modo().get(nMode).getZones().size()));
-        } else {
-            System.out.println("no hay zonas");
         }
         Intent i = new Intent(this, ModesActivity.class);
         i.putExtra("nControlador", nControlador);

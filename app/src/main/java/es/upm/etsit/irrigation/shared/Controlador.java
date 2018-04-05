@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 
 public class Controlador implements Serializable {
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     private String titulo = "";
     private String id = "";
