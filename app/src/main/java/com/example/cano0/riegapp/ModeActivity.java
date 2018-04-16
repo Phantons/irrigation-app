@@ -42,13 +42,13 @@ public class ModeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mode);
 
+        hideSoftKeyboard();
         context = getApplicationContext();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         nomMode = (EditText) findViewById(R.id.mode_name);
 
-        hideSoftKeyboard();
         getModeSelected();
         setActivity();
 
@@ -67,6 +67,7 @@ public class ModeActivity extends AppCompatActivity {
                 saveMode();
             }
         });
+        hideSoftKeyboard();
 
 
     }
@@ -84,6 +85,7 @@ public class ModeActivity extends AppCompatActivity {
             listZones = mode.getZones();
         } else {
             mode = new Mode(nMode, "");
+            mode.setID(nMode);
             listZones = new ArrayList<>();
             mode.setZones(listZones);
             controlador.addMode(mode);
@@ -114,6 +116,7 @@ public class ModeActivity extends AppCompatActivity {
     private void saveMode() {
         mode.setName(nomMode.getText().toString());
         controlador.setMode(mode);
+        usuarioClass.setControladorN(controlador);
         hideSoftKeyboard();
         saveAsyntask = new SaveAsyntask(controlador);
         saveAsyntask.execute((Void) null);
@@ -122,6 +125,9 @@ public class ModeActivity extends AppCompatActivity {
 
 
     private void newZone() {
+        mode.setName(nomMode.getText().toString());
+        controlador.setMode(mode);
+        hideSoftKeyboard();
         Intent i = new Intent(context, ZoneActivity.class);
         i.putExtra("nControlador", nControlador);
         i.putExtra("nMode", nMode);
@@ -169,7 +175,6 @@ public class ModeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Integer success) {
             if(success == 1) {
-                usuarioClass.setControladorN(controlador);
                 //Toast.makeText(context, "Modo guardado", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(ModeActivity.this, ModesActivity.class);
                 i.putExtra("nControlador", nControlador);

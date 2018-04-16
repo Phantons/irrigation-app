@@ -45,6 +45,16 @@ public class ZoneActivity extends AppCompatActivity {
     private EditText nomZone;
     private EditText portZone;
 
+    //checkbox days
+    private CheckBox monday;
+    private CheckBox tuesday;
+    private CheckBox wednesday;
+    private CheckBox thursday;
+    private CheckBox friday;
+    private CheckBox saturday;
+    private CheckBox sunday;
+    private CheckBox tiemparBox;
+
     private ArrayAdapter<Time> adapter;
     //array con las horas de riego. Intervalo de 15 minutos
     private List<Time> timeIrrigate;
@@ -56,6 +66,7 @@ public class ZoneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zone);
+        hideSoftKeyboard();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,6 +76,7 @@ public class ZoneActivity extends AppCompatActivity {
         finalMinuteN = (EditText) findViewById(R.id.finalminute);
         nomZone = (EditText) findViewById(R.id.nomZone);
         portZone = (EditText) findViewById(R.id.portZone);
+
 
         FloatingActionButton saveZone = (FloatingActionButton) findViewById(R.id.fab);
         saveZone.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +115,7 @@ public class ZoneActivity extends AppCompatActivity {
             schedule = zone.getSchedule();
             timeIrrigate = schedule.getIrrigationCycles();
             days = schedule.getDays();
+            initialDaysIrrigation(); //asigno las checkbox
             nomZone.setText(zone.getName());
             portZone.setText(Integer.toString(zone.getPinAddress()));
         } else {
@@ -194,30 +207,59 @@ public class ZoneActivity extends AppCompatActivity {
         // Check which checkbox was clicked
         switch(view.getId()) {
             case R.id.check_take_weather:
-                tiempar =checked;
+                tiempar = checked;
                 break;
             case R.id.day1:
-                days[0] = checked;
-                break;
-            case R.id.day2:
                 days[1] = checked;
                 break;
-            case R.id.day3:
+            case R.id.day2:
                 days[2] = checked;
                 break;
-            case R.id.day4:
+            case R.id.day3:
                 days[3] = checked;
                 break;
-            case R.id.day5:
+            case R.id.day4:
                 days[4] = checked;
                 break;
-            case R.id.day6:
+            case R.id.day5:
                 days[5] = checked;
                 break;
-            case R.id.day7:
+            case R.id.day6:
                 days[6] = checked;
                 break;
+            case R.id.day7:
+                days[0] = checked;
+                break;
         }
+    }
+
+    /**
+     * Inicializa las checkbox
+     */
+    private void initialDaysIrrigation() {
+        setIdCheckBox();
+        monday.setChecked(days[1]);
+        tuesday.setChecked(days[2]);
+        wednesday.setChecked(days[3]);
+        thursday.setChecked(days[4]);
+        friday.setChecked(days[5]);
+        saturday.setChecked(days[6]);
+        sunday.setChecked(days[0]);
+        tiemparBox.setChecked(zone.shouldTakeWeather());
+    }
+
+    /**
+     * Asigna la id a todas las CheckBox
+     */
+    private void setIdCheckBox() {
+        monday = (CheckBox) findViewById(R.id.day1);
+        tuesday = (CheckBox) findViewById(R.id.day2);
+        wednesday = (CheckBox) findViewById(R.id.day3);
+        thursday = (CheckBox) findViewById(R.id.day4);
+        friday = (CheckBox) findViewById(R.id.day5);
+        saturday = (CheckBox) findViewById(R.id.day6);
+        sunday = (CheckBox) findViewById(R.id.day7);
+        tiemparBox = (CheckBox) findViewById(R.id.check_take_weather);
     }
 
     /**

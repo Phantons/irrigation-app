@@ -24,7 +24,6 @@ public class DatosActivity extends AppCompatActivity {
 
     ArrayAdapter<Controlador> adapter;
     private  ControllerActivity controllerActivity;
-    private UsuarioClass usuarioClass;
 
     // private SharedPreferences outputStream;
     //private int numControladores = 0;
@@ -38,10 +37,6 @@ public class DatosActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         controllerActivity = new ControllerActivity();
-        usuarioClass = new UsuarioClass();
-        if(getIntent().getExtras() != null) {
-            usuarioClass = new UsuarioClass(getIntent().getExtras().getString("usuario"), new ArrayList<Controlador>());
-        }
         //Botón añadir Controlador
         create = (FloatingActionButton) findViewById(R.id.fab);
         create.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +59,7 @@ public class DatosActivity extends AppCompatActivity {
     private void addView() {
         try {
             ListView listaView = (ListView) findViewById(R.id.Controllers_list);
-            adapter = new ControladorAdapter(DatosActivity.this, usuarioClass.getControladorList());
+            adapter = new ControladorAdapter(DatosActivity.this, UsuarioClass.getControladorList());
             listaView.setAdapter(adapter);
             listaView.refreshDrawableState();
             adapter.notifyDataSetChanged();

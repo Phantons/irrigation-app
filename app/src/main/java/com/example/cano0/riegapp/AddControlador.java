@@ -6,15 +6,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +36,8 @@ public class AddControlador extends AppCompatActivity {
     private EditText idControlador;
     private AutoCompleteTextView muniControlador;
     private Controlador controlador;
-    private UsuarioClass usuarioClass;
+    private List<Municipio> listaMunicipios = new ArrayList<>();
+    private String codeMunicipio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +49,19 @@ public class AddControlador extends AppCompatActivity {
         muniControlador = (AutoCompleteTextView) findViewById(R.id.munControlador);
         addControlador = (Button) findViewById(R.id.addController);
 
-        usuarioClass = new UsuarioClass();
+        muniControlador.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           public void onItemClick(AdapterView<?> parent, View view, int position, long rowId) {
+               hideSoftKeyboard();
+               String selection = (String) parent.getItemAtPosition(position);
+               for(Municipio municipio : listaMunicipios) {
+                   if(municipio.getNAME() == selection) {
+                       codeMunicipio = municipio.getCOD();
+                   }
+               }
+               System.out.println("codigo: " + codeMunicipio);
+           }
+       });
+
 
         addControlador.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +69,10 @@ public class AddControlador extends AppCompatActivity {
                 controladorCreated();
             }
         });
+
+        hideSoftKeyboard();
+        getMunicipiosJson();
+        municipioListener();
 
     }
 
@@ -59,7 +83,7 @@ public class AddControlador extends AppCompatActivity {
         } else {
             hideSoftKeyboard();
             // Intent que envia los datos recopilados
-            controlador = new Controlador(nomControlador.getText().toString(), idControlador.getText().toString(), true, muniControlador.getText().toString(), null, new ArrayList<Mode>());
+            controlador = new Controlador(nomControlador.getText().toString(), idControlador.getText().toString(), true, codeMunicipio, null, new ArrayList<Mode>());
             addControllerTask = new AddControllerTask(controlador);
             addControllerTask.execute((Void) null);
         }
@@ -67,22 +91,30 @@ public class AddControlador extends AppCompatActivity {
 
     private void municipioListener() {
         // Arreglo con las regiones
-        String[] regions = getResources().getStringArray(R.array.region_array);
+        String[] regions = new String[listaMunicipios.size()];
+        for(int i = 0; i < regions.length; i++) {
+            regions[i] = listaMunicipios.get(i).getNAME();
+        }
         // Le pasamos las regiones al adaptador
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, regions);
         // finalmente le asignamos el adaptador a nuestro elemento
         muniControlador.setAdapter(adapter);
     }
-    /*
-    private void getMunicipiosJson() {
-        InputStream mjson = getResources().openRawResource()
-        try {
-            JSONObject jsonObj = new JSONObject();
-        } catch {
 
+    private void getMunicipiosJson() {
+        try {
+            InputStream ins = getResources().openRawResource(R.raw.codmunicipios);
+            String todo = readTextFile(ins);
+            JSONObject object = new JSONObject(todo);
+            JSONArray array = object.getJSONArray("municipios");
+            for (int i = 0; i < array.length(); i++) {
+                listaMunicipios.add(new Municipio(i, array.getJSONObject(i)));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
         }
+
     }
-    */
 
     @Override
     public void onBackPressed() {
@@ -92,10 +124,28 @@ public class AddControlador extends AppCompatActivity {
         finish();
     }
 
+    public String readTextFile(InputStream inputStream) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-    /**
-     * esconde el teclado
-     */
+        byte buf[] = new byte[1024];
+        int len;
+        try {
+            while ((len = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, len);
+            }
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return outputStream.toString();
+    }
+
+
+
+        /**
+         * esconde el teclado
+         */
     public void hideSoftKeyboard() {
         if(getCurrentFocus()!=null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -117,6 +167,7 @@ public class AddControlador extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Void... params) {
 
+            UsuarioClass.addControladorList(controlador);
             int result = SocketHandler.sendOrUpdateController(newControlador);
             System.out.println(result);
 
@@ -128,8 +179,6 @@ public class AddControlador extends AppCompatActivity {
             addControlador = null;
 
             if (success == 1) {
-                usuarioClass.addControladorList(controlador);
-                addControllerTask = new AddControllerTask(controlador);
                 Toast.makeText(AddControlador.this, "controlador guardado ", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(AddControlador.this, DatosActivity.class);
                 startActivity(i);

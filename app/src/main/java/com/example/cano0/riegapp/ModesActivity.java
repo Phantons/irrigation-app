@@ -9,9 +9,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import es.upm.etsit.irrigation.shared.Controlador;
 import es.upm.etsit.irrigation.shared.Mode;
@@ -28,6 +34,8 @@ public class ModesActivity extends AppCompatActivity {
     private Context context;
     private ArrayAdapter<Mode> adapter;
     private SaveAsyntask saveAsyntask = null;
+    protected static ListView listaView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +45,11 @@ public class ModesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
+        listaView = (ListView) findViewById(R.id.modes_list);
+
         context = getApplicationContext();
         getControlador();
+        System.out.println(Integer.toString(controlador.getList_modo().size()) + " modos configurados");
 
         addModes = (FloatingActionButton) findViewById(R.id.fab);
         addModes.setOnClickListener(new View.OnClickListener() {
@@ -59,13 +70,12 @@ public class ModesActivity extends AppCompatActivity {
         usuarioClass = new UsuarioClass();
         nControlador = getIntent().getExtras().getInt("nControlador");
         controlador = usuarioClass.getControlador(nControlador);
-        //Toast.makeText(this, "controlador: " + controlador.getTitulo(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "controlador: " + controlador.getTitulo(), Toast.LENGTH_SHORT).show();
 
     }
 
     private void addView() {
         try {
-            ListView listaView = (ListView) findViewById(R.id.modes_list);
             adapter = new ModeAdapter(ModesActivity.this, controlador.getList_modo(), nControlador);
             listaView.setAdapter(adapter);
             listaView.refreshDrawableState();
@@ -87,6 +97,7 @@ public class ModesActivity extends AppCompatActivity {
 
 
     public void onBackPressed() {
+        UsuarioClass.setControladorN(controlador);
         saveAsyntask = new SaveAsyntask(controlador);
         saveAsyntask.execute((Void) null);
     }
@@ -103,12 +114,11 @@ public class ModesActivity extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            return SocketHandler.sendOrUpdateController(controlador);
+            return SocketHandler.sendOrUpdateController(controladorEnviado);
         }
         @Override
         protected void onPostExecute(final Integer success) {
             if(success == 1) {
-                UsuarioClass.setControladorN(controlador);
                 Toast.makeText(context, "Controlador guardado", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Fallo en la conexión al intentar guardar cambios", Toast.LENGTH_SHORT).show();
