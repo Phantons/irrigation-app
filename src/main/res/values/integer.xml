@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <integer name="controladorN_view">1</integer>
+        <integer name="controladorN_pos">2</integer>
+        <integer name="modeN_view">3</integer>
+        <integer name="modeN_pos">4</integer>
+        <integer name="zonaN_view">5</integer>
+        <integer name="zonaN_pos">6</integer>
+        <integer name="zonaNRegar_pos">7</integer>
+</resources>
